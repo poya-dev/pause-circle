@@ -1,0 +1,14 @@
+-- Materialized views and computed tables
+-- This file is for future use when you need to create views
+
+-- Example view (commented out):
+-- create view challenge_stats as
+-- select 
+--   c.id,
+--   c.name,
+--   count(cp.user_id) as participant_count,
+--   count(ai.id) as total_interactions
+-- from challenges c
+-- left join challenge_participants cp on c.id = cp.challenge_id
+-- left join app_interactions ai on c.id = ai.challenge_id
+-- group by c.id, c.name;
