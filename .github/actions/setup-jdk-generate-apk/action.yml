@@ -26,23 +26,29 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Set Up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'zulu' # See 'Supported distributions' for available options
-        java-version: '17'
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
+  - name: Set Up JDK
+    uses: actions/setup-java@v3
+    with:
+      distribution: 'zulu' # See 'Supported distributions' for available options
+      java-version: '17'
+  - name: Setup Gradle
+    uses: gradle/gradle-build-action@v2
 
-    - name: Generate Test APK
-      run: |
-        pnpm prebuild:${{ inputs.APP_ENV }}
-        cd  android
-        chmod +x ./gradlew
-        ./gradlew assembleRelease --no-daemon
-        cd ..
-      shell: bash
-      env:
-        EXPO_NO_DOTENV: '1'
-        APP_ENV: ${{ inputs.APP_ENV }}
-        CI: 'true'
+  - name: Generate Test APK
+    run: |
+      if [ "${{ inputs.APP_ENV }}" = "development" ]; then
+        pnpm prebuild
+      elif [ "${{ inputs.APP_ENV }}" = "staging" ]; then
+        pnpm prebuild:staging
+      elif [ "${{ inputs.APP_ENV }}" = "production" ]; then
+        pnpm prebuild:prod
+      fi
+      cd  android
+      chmod +x ./gradlew
+      ./gradlew assembleRelease --no-daemon
+      cd ..
+    shell: bash
+    env:
+      EXPO_NO_DOTENV: '1'
+      APP_ENV: ${{ inputs.APP_ENV }}
+      CI: 'true'

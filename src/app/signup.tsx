@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router } from 'expo-router';
 import * as React from 'react';
@@ -9,32 +10,33 @@ import { Button, SafeAreaView, Text, View } from '@/components/ui';
 import { FormInput } from '@/components/ui/form-input';
 import { supabase } from '@/lib/supabase';
 
-const loginSchema = z.object({
+const signupSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  displayName: z.string().min(1, 'Please enter your name'),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type SignupFormData = z.infer<typeof signupSchema>;
 
-export default function LoginScreen() {
+export default function SignupScreen() {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     control,
-  } = useForm<LoginFormData>({
-    defaultValues: {
-      email: 'admin@gmail.com',
-      password: 'Admin2020',
-    },
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
   });
-  console.log(errors);
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
+        options: {
+          data: {
+            display_name: data.displayName,
+          },
+        },
       });
 
       if (error) throw error;
@@ -49,17 +51,29 @@ export default function LoginScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 px-6">
         {/* Header */}
-        <View className="mt-16">
-          <Text className="mb-3 text-[32px] font-bold text-neutral-900">
-            Welcome Back
+        <View className="mt-16 items-center">
+          <View className="mb-10 size-[160px] items-center justify-center rounded-3xl bg-blue-50">
+            <Ionicons name="person-add-outline" size={80} color="#2563EB" />
+          </View>
+          <Text className="mb-3 text-center text-[32px] font-bold text-neutral-900">
+            Create Account
           </Text>
-          <Text className="mb-8 text-xl leading-relaxed text-neutral-600">
-            Sign in to continue your journey
+          <Text className="mb-8 text-center text-xl leading-relaxed text-neutral-600">
+            Join Unscroll to start your digital wellbeing journey
           </Text>
         </View>
 
         {/* Form */}
         <View className="space-y-6">
+          <FormInput
+            control={control}
+            name="displayName"
+            placeholder="Enter your name"
+          />
+          {errors.displayName && (
+            <Text className="text-red-500">{errors.displayName.message}</Text>
+          )}
+
           <FormInput
             control={control}
             name="email"
@@ -70,6 +84,7 @@ export default function LoginScreen() {
           {errors.email && (
             <Text className="text-red-500">{errors.email.message}</Text>
           )}
+
           <FormInput
             control={control}
             name="password"
@@ -90,17 +105,17 @@ export default function LoginScreen() {
             size="lg"
             loading={isSubmitting}
           >
-            <Text className="text-lg font-medium text-white">Sign In</Text>
+            <Text className="text-lg font-medium text-white">Sign Up</Text>
           </Button>
 
-          <Link href="/signup" asChild>
+          <Link href="/login" asChild>
             <Button
               className="h-[52px] rounded-xl border-2 border-neutral-200"
               variant="ghost"
               size="lg"
             >
               <Text className="text-lg font-medium text-neutral-900">
-                Create an Account
+                Already have an account?
               </Text>
             </Button>
           </Link>
