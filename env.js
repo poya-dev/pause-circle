@@ -17,6 +17,7 @@ const z = require('zod');
 
 const packageJSON = require('./package.json');
 const path = require('path');
+
 const APP_ENV = process.env.APP_ENV ?? 'development';
 // eslint-disable-next-line no-undef
 const envPath = path.resolve(__dirname, `.env.${APP_ENV}`);
@@ -30,17 +31,17 @@ require('dotenv').config({
  * Such as: bundle id, package name, app name.
  *
  * You can add them to the .env file but we think it's better to keep them here as as we use prefix to generate this values based on the APP_ENV
- * for example: if the APP_ENV is staging, the bundle id will be com.unscroll-app.staging
+ * for example: if the APP_ENV is staging, the bundle id will be com.pause-circle.staging
  */
 
 // TODO: Replace these values with your own
 
-const BUNDLE_ID = 'com.unscroll-app'; // ios bundle id (hyphens OK for iOS)
-const PACKAGE = 'com.unscroll_app'; // android package name (underscores for Android)
-const NAME = 'unscroll-app'; // app name
+const BUNDLE_ID = 'com.pause-circle'; // ios bundle id (hyphens OK for iOS)
+const PACKAGE = 'com.pause_circle'; // android package name (underscores for Android)
+const NAME = 'pause-circle'; // app name
 const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner
 const EAS_PROJECT_ID = 'c3e1075b-6fe7-4686-aa49-35b46a229044'; // eas project id
-const SCHEME = 'unscroll-app'; // app scheme
+const SCHEME = 'pause-circle'; // app scheme
 
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
@@ -83,6 +84,10 @@ const client = z.object({
   API_URL: z.string(),
   VAR_NUMBER: z.number(),
   VAR_BOOL: z.boolean(),
+
+  // Supabase (optional for development)
+  SUPABASE_URL: z.string().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
 });
 
 const buildTime = z.object({
@@ -93,7 +98,7 @@ const buildTime = z.object({
 });
 
 /**
- * @type {Record<keyof z.infer<typeof client> , unknown>}
+ * @type {Record<keyof import('zod').infer<typeof client> , unknown>}
  */
 const _clientEnv = {
   APP_ENV,
@@ -107,10 +112,14 @@ const _clientEnv = {
   API_URL: process.env.API_URL,
   VAR_NUMBER: Number(process.env.VAR_NUMBER),
   VAR_BOOL: process.env.VAR_BOOL === 'true',
+
+  // Supabase (using defaults for development)
+  SUPABASE_URL: process.env.SUPABASE_URL || 'https://demo.supabase.co',
+  SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || 'demo-key',
 };
 
 /**
- * @type {Record<keyof z.infer<typeof buildTime> , unknown>}
+ * @type {Record<keyof import('zod').infer<typeof buildTime> , unknown>}
  */
 const _buildTimeEnv = {
   EXPO_ACCOUNT_OWNER,

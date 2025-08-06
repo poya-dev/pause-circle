@@ -1,7 +1,7 @@
-import type { ConfigContext, ExpoConfig } from '@expo/config';
 import type { AppIconBadgeConfig } from 'app-icon-badge/types';
+import { type ConfigContext, type ExpoConfig } from 'expo/config';
 
-import { ClientEnv, Env } from './env';
+import { Env, withEnvSuffix } from './env';
 
 const appIconBadgeConfig: AppIconBadgeConfig = {
   enabled: Env.APP_ENV !== 'production',
@@ -21,65 +21,53 @@ const appIconBadgeConfig: AppIconBadgeConfig = {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: Env.NAME,
-  description: `${Env.NAME} Mobile App`,
-  owner: Env.EXPO_ACCOUNT_OWNER,
+  name: withEnvSuffix(Env.NAME),
+  description: 'Take control of your digital life with friends and family',
+  slug: 'pause-circle',
   scheme: Env.SCHEME,
-  slug: 'obytesapp',
-  version: Env.VERSION.toString(),
+  version: Env.VERSION,
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
-  updates: {
-    fallbackToCacheTimeout: 0,
+  splash: {
+    image: './assets/splash-icon.png',
+    resizeMode: 'contain',
+    backgroundColor: '#3B82F6',
   },
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
     bundleIdentifier: Env.BUNDLE_ID,
-    infoPlist: {
-      ITSAppUsesNonExemptEncryption: false,
-    },
-  },
-  experiments: {
-    typedRoutes: true,
   },
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#2E3C4B',
+      backgroundColor: '#3B82F6',
     },
     package: Env.PACKAGE,
   },
-  web: {
-    favicon: './assets/favicon.png',
-    bundler: 'metro',
-  },
-  plugins: [
-    [
-      'expo-splash-screen',
-      {
-        backgroundColor: '#2E3C4B',
-        image: './assets/splash-icon.png',
-        imageWidth: 150,
-      },
-    ],
-    [
-      'expo-font',
-      {
-        fonts: ['./assets/fonts/Inter.ttf'],
-      },
-    ],
-    'expo-localization',
-    'expo-router',
-    ['app-icon-badge', appIconBadgeConfig],
-    ['react-native-edge-to-edge'],
-  ],
   extra: {
-    ...ClientEnv,
     eas: {
       projectId: Env.EAS_PROJECT_ID,
     },
+    ...Env,
   },
+  plugins: [
+    'expo-localization',
+    [
+      'expo-build-properties',
+      {
+        ios: {
+          deploymentTarget: '15.1',
+        },
+        android: {
+          compileSdkVersion: 33,
+          targetSdkVersion: 33,
+          buildToolsVersion: '33.0.0',
+        },
+      },
+    ],
+    ['app-icon-badge', appIconBadgeConfig],
+  ],
 });
