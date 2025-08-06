@@ -2,70 +2,86 @@
 import '../../global.css';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { ThemeProvider } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import FlashMessage from 'react-native-flash-message';
+import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { APIProvider } from '@/api';
-import { hydrateAuth, loadSelectedTheme } from '@/lib';
-import { useThemeConfig } from '@/lib/use-theme-config';
+import { useAuthStore } from '@/lib/stores';
 
-export { ErrorBoundary } from 'expo-router';
-
-export const unstable_settings = {
-  initialRouteName: '(app)',
-};
-
-hydrateAuth();
-loadSelectedTheme();
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-// Set the animation options. This is optional.
-SplashScreen.setOptions({
-  duration: 500,
-  fade: true,
-});
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  return (
-    <Providers>
-      <Stack>
-        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-      </Stack>
-    </Providers>
-  );
-}
+  const { isAuthenticated, loading, initialize } = useAuthStore();
+  const [isInitialized, setIsInitialized] = React.useState(false);
 
-function Providers({ children }: { children: React.ReactNode }) {
-  const theme = useThemeConfig();
+  React.useEffect(() => {
+    let mounted = true;
+
+    const initAuth = async () => {
+      try {
+        await initialize();
+      } finally {
+        if (mounted) {
+          setIsInitialized(true);
+        }
+      }
+    };
+
+    initAuth();
+
+    return () => {
+      mounted = false;
+    };
+  }, [initialize]);
+
+  // Only show loading state during initial load
+  if (!isInitialized) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View className="flex-1 items-center justify-center bg-white">
+          <ActivityIndicator size="large" color="#2563EB" />
+        </View>
+      </GestureHandlerRootView>
+    );
+  }
+
   return (
-    <GestureHandlerRootView
-      style={styles.container}
-      className={theme.dark ? `dark` : undefined}
-    >
-      <KeyboardProvider>
-        <ThemeProvider value={theme}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
           <APIProvider>
-            <BottomSheetModalProvider>
-              {children}
-              <FlashMessage position="top" />
-            </BottomSheetModalProvider>
+            <StatusBar style="dark" />
+            {loading ? (
+              <View className="flex-1 items-center justify-center bg-white">
+                <ActivityIndicator size="large" color="#2563EB" />
+              </View>
+            ) : !isAuthenticated ? (
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  animation: 'fade',
+                }}
+              >
+                <Stack.Screen name="welcome" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="signup" />
+              </Stack>
+            ) : (
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="(app)" />
+              </Stack>
+            )}
           </APIProvider>
-        </ThemeProvider>
-      </KeyboardProvider>
+        </QueryClientProvider>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
