@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import colors from '@/components/ui/colors';
-
+import colors from './colors';
 import { Text } from './text';
 
 const SIZE = 20;
@@ -72,7 +71,7 @@ const Label = ({ text, testID, className = '' }: LabelProps) => {
 };
 
 export const CheckboxIcon = ({ checked = false }: IconProps) => {
-  const color = checked ? colors.primary[300] : colors.charcoal[400];
+  const color = checked ? colors.primary.light : colors.text.muted;
   return (
     <MotiView
       style={{

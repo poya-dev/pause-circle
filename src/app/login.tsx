@@ -1,109 +1,50 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, router } from 'expo-router';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { Alert } from 'react-native';
-import * as z from 'zod';
 
 import { Button, SafeAreaView, Text, View } from '@/components/ui';
-import { FormInput } from '@/components/ui/form-input';
-import { supabase } from '@/lib/supabase';
 
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
-export default function LoginScreen() {
-  const {
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    control,
-  } = useForm<LoginFormData>({
-    defaultValues: {
-      email: 'admin@gmail.com',
-      password: 'Admin2020',
-    },
-    resolver: zodResolver(loginSchema),
-  });
-  console.log(errors);
-
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (error) throw error;
-
-      router.replace('/home');
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    }
-  };
-
+export default function LoginScreen(): React.ReactElement {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="bg-charcoal-950 flex-1">
       <View className="flex-1 px-6">
-        {/* Header */}
-        <View className="mt-16">
-          <Text className="mb-3 text-[32px] font-bold text-neutral-900">
-            Welcome Back
+        {/* Brand */}
+        <View className="mt-16 items-center">
+          <View className="bg-primary-600/20 size-14 items-center justify-center rounded-full">
+            <View className="bg-primary-600 size-9 rounded-full" />
+          </View>
+          <Text className="mt-4 text-2xl font-semibold text-neutral-100">
+            Pause Circle
           </Text>
-          <Text className="mb-8 text-xl leading-relaxed text-neutral-600">
-            Sign in to continue your journey
+          <Text className="mt-2 text-center text-neutral-400">
+            Sign in to start focusing
           </Text>
         </View>
 
-        {/* Form */}
-        <View className="space-y-6">
-          <FormInput
-            control={control}
-            name="email"
-            placeholder="Enter your email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          {errors.email && (
-            <Text className="text-red-500">{errors.email.message}</Text>
-          )}
-          <FormInput
-            control={control}
-            name="password"
-            placeholder="Enter your password"
-            secureTextEntry
-          />
-          {errors.password && (
-            <Text className="text-red-500">{errors.password.message}</Text>
-          )}
-        </View>
-
-        {/* Action Buttons */}
-        <View className="mt-auto space-y-5 pb-8">
+        {/* Social sign-in (UI only) */}
+        <View className="mt-12 space-y-4">
           <Button
-            onPress={handleSubmit(onSubmit)}
-            className="h-[52px] rounded-xl bg-blue-600"
-            variant="default"
+            onPress={() => {}}
+            className="h-[52px] rounded-xl bg-white/10"
+            variant="outline"
             size="lg"
-            loading={isSubmitting}
           >
-            <Text className="text-lg font-medium text-white">Sign In</Text>
+            <Text className="text-neutral-100">Continue with Apple</Text>
           </Button>
-
-          <Link href="/signup" asChild>
-            <Button
-              className="h-[52px] rounded-xl border-2 border-neutral-200"
-              variant="ghost"
-              size="lg"
-            >
-              <Text className="text-lg font-medium text-neutral-900">
-                Create an Account
-              </Text>
-            </Button>
-          </Link>
+          <Button
+            onPress={() => {}}
+            className="h-[52px] rounded-xl bg-white"
+            variant="outline"
+            size="lg"
+          >
+            <Text className="text-neutral-900">Continue with Google</Text>
+          </Button>
+          <Button
+            onPress={() => {}}
+            className="h-[52px] rounded-xl border border-neutral-800 bg-transparent"
+            variant="ghost"
+            size="lg"
+          >
+            <Text className="text-neutral-200">Continue with Email</Text>
+          </Button>
         </View>
       </View>
     </SafeAreaView>

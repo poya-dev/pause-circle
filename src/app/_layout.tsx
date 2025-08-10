@@ -5,11 +5,13 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { colorScheme } from 'nativewind';
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { APIProvider } from '@/api';
+import { loadSelectedTheme } from '@/lib/hooks/use-selected-theme';
 import { useAuthStore } from '@/lib/stores';
 
 const queryClient = new QueryClient();
@@ -19,6 +21,10 @@ export default function RootLayout() {
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   React.useEffect(() => {
+    // Force dark theme for our app
+    colorScheme.set('dark');
+    loadSelectedTheme();
+
     let mounted = true;
 
     const initAuth = async () => {
@@ -42,8 +48,11 @@ export default function RootLayout() {
   if (!isInitialized) {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <View className="flex-1 items-center justify-center bg-white">
-          <ActivityIndicator size="large" color="#2563EB" />
+        <View
+          className="flex-1 items-center justify-center"
+          style={{ backgroundColor: '#0B1020' }}
+        >
+          <ActivityIndicator size="large" color="#22D3EE" />
         </View>
       </GestureHandlerRootView>
     );
@@ -54,10 +63,13 @@ export default function RootLayout() {
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
           <APIProvider>
-            <StatusBar style="dark" />
+            <StatusBar style="light" backgroundColor="#0B1020" />
             {loading ? (
-              <View className="flex-1 items-center justify-center bg-white">
-                <ActivityIndicator size="large" color="#2563EB" />
+              <View
+                className="flex-1 items-center justify-center"
+                style={{ backgroundColor: '#0B1020' }}
+              >
+                <ActivityIndicator size="large" color="#22D3EE" />
               </View>
             ) : !isAuthenticated ? (
               <Stack
