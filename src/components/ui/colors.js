@@ -1,78 +1,73 @@
+// Digital Wellbeing App Colors - Dark Theme Only
+// Exact colors from your shared image
 module.exports = {
-  white: '#ffffff',
-  black: '#000000',
-  charcoal: {
-    50: '#F2F2F2',
-    100: '#E5E5E5',
-    200: '#C9C9C9',
-    300: '#B0B0B0',
-    400: '#969696',
-    500: '#7D7D7D',
-    600: '#616161',
-    700: '#474747',
-    800: '#383838',
-    850: '#2E2E2E',
-    900: '#1E1E1E',
-    950: '#121212',
+  // Base dark background - from your image
+  base: {
+    DEFAULT: '#0B1020', // main background
+    900: '#080E19', // deeper background
   },
-  neutral: {
-    50: '#FAFAFA',
-    100: '#F5F5F5',
-    200: '#F0EFEE',
-    300: '#D4D4D4',
-    400: '#A3A3A3',
-    500: '#737373',
-    600: '#525252',
-    700: '#404040',
-    800: '#262626',
-    900: '#171717',
-  },
+
+  // Primary cyan-teal gradient - from your image
   primary: {
-    50: '#FFE2CC',
-    100: '#FFC499',
-    200: '#FFA766',
-    300: '#FF984C',
-    400: '#FF8933',
-    500: '#FF7B1A',
-    600: '#FF6C00',
-    700: '#E56100',
-    800: '#CC5600',
-    900: '#B24C00',
+    light: '#22D3EE', // cyan accent (main highlight)
+    DEFAULT: '#14B8A6', // teal accent
+    dark: '#0D9488', // deeper teal
+    // Aliases for compatibility
+    300: '#22D3EE', // light cyan
+    400: '#22D3EE',
+    500: '#14B8A6',
+    600: '#0D9488',
   },
-  success: {
-    50: '#F0FDF4',
-    100: '#DCFCE7',
-    200: '#BBF7D0',
-    300: '#86EFAC',
-    400: '#4ADE80',
-    500: '#22C55E',
-    600: '#16A34A',
-    700: '#15803D',
-    800: '#166534',
-    900: '#14532D',
+
+  // Secondary blue accents
+  secondary: {
+    light: '#60A5FA', // sky blue
+    DEFAULT: '#3B82F6', // blue
+    400: '#60A5FA',
+    500: '#3B82F6',
   },
-  warning: {
-    50: '#FFFBEB',
-    100: '#FEF3C7',
-    200: '#FDE68A',
-    300: '#FCD34D',
-    400: '#FBBF24',
-    500: '#F59E0B',
-    600: '#D97706',
-    700: '#B45309',
-    800: '#92400E',
-    900: '#78350F',
+
+  // Text colors for dark theme
+  text: {
+    primary: '#FFFFFF', // white text
+    secondary: '#CBD5E1', // light gray
+    muted: '#64748B', // muted gray
   },
-  danger: {
-    50: '#FEF2F2',
-    100: '#FEE2E2',
-    200: '#FECACA',
-    300: '#FCA5A5',
-    400: '#F87171',
-    500: '#EF4444',
-    600: '#DC2626',
-    700: '#B91C1C',
-    800: '#991B1B',
-    900: '#7F1D1D',
+
+  // Glass morphism effects - exact from your config
+  card: 'rgba(255,255,255,0.05)',
+  cardBorder: 'rgba(255,255,255,0.1)',
+
+  // Status indicators
+  success: '#10B981',
+  warning: '#F59E0B',
+  danger: '#EF4444',
+
+  // App brand colors
+  apps: {
+    tiktok: '#FF0050',
+    instagram: '#E4405F',
+    whatsapp: '#25D366',
+    youtube: '#FF0000',
+    twitter: '#1DA1F2',
+    facebook: '#1877F2',
+    snapchat: '#FFFC00',
+    discord: '#5865F2',
+  },
+
+  // For icon compatibility
+  neutral: {
+    400: '#94A3B8', // lighter gray
+    500: '#64748B', // same as text.muted
+    800: '#1E293B', // darker gray for backgrounds
+  },
+
+  // Compatibility colors
+  white: '#FFFFFF',
+  black: '#000000',
+
+  // Legacy charcoal color for old components
+  charcoal: {
+    400: '#475569', // gray for unchecked states
   },
 };
