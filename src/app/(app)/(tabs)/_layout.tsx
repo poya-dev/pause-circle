@@ -10,16 +10,14 @@ export default function TabLayout() {
         tabBarStyle: {
           elevation: 0,
           borderTopWidth: 1,
-          borderTopColor: '#E5E7EB',
-          height: 88,
-          paddingBottom: 28,
-          paddingTop: 8,
+          borderTopColor: 'rgba(255, 255, 255, 0.1)',
+          backgroundColor: '#0B1020',
+          height: 84,
+          paddingBottom: 20,
+          paddingTop: 10,
         },
-        tabBarActiveTintColor: '#2563EB',
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-        },
+        tabBarActiveTintColor: '#22D3EE',
+        tabBarShowLabel: false,
         tabBarIconStyle: {
           marginBottom: 4,
         },
@@ -28,27 +26,32 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
           tabBarIcon: ({ color }) => (
             <Ionicons name="home-outline" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="challenges"
+        name="groups"
         options={{
-          title: 'Challenges',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="trophy-outline" size={24} color={color} />
+            <Ionicons name="people-outline" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="analytics"
         options={{
-          title: 'Settings',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="settings-outline" size={24} color={color} />
+            <Ionicons name="stats-chart-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={24} color={color} />
           ),
         }}
       />
