@@ -55,6 +55,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-localization',
+    'expo-notifications',
     [
       'expo-build-properties',
       {
