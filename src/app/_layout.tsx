@@ -78,9 +78,7 @@ export default function RootLayout() {
                   animation: 'fade',
                 }}
               >
-                <Stack.Screen name="welcome" />
-                <Stack.Screen name="login" />
-                <Stack.Screen name="signup" />
+                <Stack.Screen name="(app)" />
               </Stack>
             ) : (
               <Stack
