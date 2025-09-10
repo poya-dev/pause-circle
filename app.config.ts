@@ -46,6 +46,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#3B82F6',
     },
     package: Env.PACKAGE,
+    permissions: [
+      'android.permission.QUERY_ALL_PACKAGES',
+      'android.permission.PACKAGE_USAGE_STATS',
+    ],
+    blockedPermissions: [],
   },
   extra: {
     eas: {
@@ -63,9 +68,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           deploymentTarget: '15.1',
         },
         android: {
-          compileSdkVersion: 33,
-          targetSdkVersion: 33,
-          buildToolsVersion: '33.0.0',
+          compileSdkVersion: 34,
+          targetSdkVersion: 34,
+          buildToolsVersion: '34.0.0',
+          manifest: {
+            queries: [
+              {
+                intent: [
+                  {
+                    action: 'android.intent.action.MAIN',
+                    category: ['android.intent.category.LAUNCHER'],
+                  },
+                ],
+              },
+            ],
+          },
         },
       },
     ],
